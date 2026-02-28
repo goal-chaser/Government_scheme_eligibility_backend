@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Eligible Schemes</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+min-height:100vh;
+padding:20px;
+}
+
+.header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.header h1{
+margin:0;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+padding:20px;
+border-radius:15px;
+backdrop-filter:blur(15px);
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+box-shadow:0 0 30px rgba(0,200,255,0.5);
+}
+
+.scheme-title{
+font-size:18px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.benefit{
+color:#00c6ff;
+font-weight:600;
+margin-bottom:10px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:10px;
+background:#00c6ff;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#0094cc;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+
+<h1>🎯 Schemes You Are Eligible For</h1>
+
+<p>Based on your answers</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<div class="scheme-title">
+Post Matric Scholarship
+</div>
+
+<div class="benefit">
+Benefit: ₹50,000 per year
+</div>
+
+<p>For college students from eligible income groups.</p>
+
+<button onclick="viewScheme('Post Matric Scholarship')">
+View Details
+</button>
+
+</div>
+
+
+<div class="card">
+
+<div class="scheme-title">
+Central Sector Scholarship
+</div>
+
+<div class="benefit">
+Benefit: ₹20,000 per year
+</div>
+
+<p>Financial support for meritorious students.</p>
+
+<button onclick="viewScheme('Central Sector Scholarship')">
+View Details
+</button>
+
+</div>
+
+
+<div class="card">
+
+<div class="scheme-title">
+Free Laptop Scheme
+</div>
+
+<div class="benefit">
+Benefit: Free Laptop
+</div>
+
+<p>Digital support for students.</p>
+
+<button onclick="viewScheme('Free Laptop Scheme')">
+View Details
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+function viewScheme(name){
+
+localStorage.setItem("schemeName",name)
+
+window.location.href="scheme.html"
+
+}
+
+</script>
+
+</body>
+</html>

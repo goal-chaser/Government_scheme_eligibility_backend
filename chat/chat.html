@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Scheme Assistant Chat</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+.chat-container{
+width:400px;
+height:600px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+border-radius:20px;
+display:flex;
+flex-direction:column;
+overflow:hidden;
+box-shadow:0 0 30px rgba(0,0,0,0.5);
+}
+
+.header{
+padding:15px;
+background:rgba(0,0,0,0.3);
+font-weight:600;
+text-align:center;
+}
+
+.chat-box{
+flex:1;
+padding:15px;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.message{
+padding:10px 15px;
+border-radius:15px;
+max-width:75%;
+}
+
+.ai{
+background:rgba(0,200,255,0.3);
+align-self:flex-start;
+}
+
+.user{
+background:rgba(255,255,255,0.3);
+align-self:flex-end;
+}
+
+.input-area{
+display:flex;
+padding:10px;
+background:rgba(0,0,0,0.3);
+}
+
+input{
+flex:1;
+padding:10px;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+button{
+margin-left:10px;
+padding:10px 15px;
+border:none;
+border-radius:10px;
+background:#00c6ff;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#0094cc;
+}
+
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+
+<div class="header">
+Government Scheme Assistant
+</div>
+
+<div class="chat-box" id="chatBox">
+</div>
+
+<div class="input-area">
+<input type="text" id="userInput" placeholder="Type your answer...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+</div>
+
+<script>
+
+const questions = [
+    { key: "age", question: "What is your age?" },
+    { key: "student_status", question: "Are you a student? (yes/no)" },
+    { key: "annual_income", question: "What is your annual family income?" },
+    { key: "gender", question: "What is your gender?" },
+    { key: "category", question: "What is your category? (General/OBC/SC/ST)" }
+];
+
+let step = 0;
+
+let userData = {
+    responses: []
+};
+
+const chatBox = document.getElementById("chatBox");
+
+function addMessage(text, sender){
+    const msg = document.createElement("div");
+    msg.classList.add("message", sender);
+    msg.innerText = text;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function askQuestion(){
+    if(step < questions.length){
+        setTimeout(() => {
+            addMessage(questions[step].question, "ai");
+        }, 500);
+    } else {
+        // Save structured JSON
+        localStorage.setItem("userData", JSON.stringify(userData, null, 2));
+
+        response = submitUserData();
+    }
+}
+
+function sendMessage(){
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+
+    if(text === "") return;
+
+    addMessage(text, "user");
+
+    // Append structured JSON object
+    userData.responses.push({
+        question_key: questions[step].key,
+        question: questions[step].question,
+        answer: text
+    });
+
+    input.value = "";
+    step++;
+    askQuestion();
+}
+
+// 
+document.getElementById("userInput").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        sendMessage();
+    }
+});
+
+askQuestion();
+async function submitUserData() {
+    const url = "/chat";
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (!response.ok) {
+            throw new Error("Server responded with an error");
+        }
+
+        const result = await response.json();
+
+        if(result.success){
+            window.location.href = "/loading";
+        }
+
+    } catch (error) {
+        console.error("Error submitting data:", error);
+        alert("Something went wrong. Please try again.");
+    }
+};
+
+</script>
+</body>
+</html>

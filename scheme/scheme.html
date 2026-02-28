@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Scheme Information</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+padding:20px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:rgba(255,255,255,0.08);
+padding:30px;
+border-radius:20px;
+backdrop-filter:blur(15px);
+box-shadow:0 0 30px rgba(0,0,0,0.5);
+}
+
+.title{
+font-size:28px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.description{
+margin-bottom:20px;
+opacity:0.9;
+}
+
+.section{
+margin-top:20px;
+}
+
+.section h3{
+color:#00c6ff;
+margin-bottom:8px;
+}
+
+ul{
+padding-left:20px;
+line-height:1.6;
+}
+
+button{
+margin-top:30px;
+padding:12px 20px;
+border:none;
+border-radius:10px;
+background:gray;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#555;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="title" id="title"></div>
+
+<div class="description" id="description"></div>
+
+
+<div class="section">
+<h3>Eligibility Criteria</h3>
+<ul id="eligibility"></ul>
+</div>
+
+
+<div class="section">
+<h3>Benefits</h3>
+<ul id="benefits"></ul>
+</div>
+
+
+<div class="section">
+<h3>Documents You Need 📄</h3>
+<ul id="documents"></ul>
+</div>
+
+
+<button onclick="goBack()">← Back to Schemes</button>
+
+</div>
+
+
+
+
+<script>
+
+function viewScheme(name){
+    localStorage.setItem("schemeName", name);
+    window.location.href = "scheme.html";
+}
+
+async function loadSchemes() {
+
+    const response = await fetch("/dashboard"); 
+    const data = await response.json();
+
+    if (!data.success) {
+        document.querySelector(".grid").innerHTML =
+            "<p>Unable to fetch schemes.</p>";
+        return;
+    }
+
+    const grid = document.querySelector(".grid");
+    grid.innerHTML = "";
+
+    data.schemes.forEach(scheme => {
+
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+            <div class="scheme-title">
+                ${scheme.name}
+            </div>
+
+            <div class="benefit">
+                Benefit: ${scheme.benefits}
+            </div>
+
+            <p>${scheme.eligibility_reason}</p>
+
+            <button onclick="viewScheme('${scheme.name}')">
+                View Details
+            </button>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+loadSchemes();
+
+
+</script>
+
+</body>
+</html>
